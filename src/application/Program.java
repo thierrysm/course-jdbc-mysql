@@ -20,7 +20,8 @@ public class Program {
                     "INSERT INTO seller"
                     + "(Name, Email, BirthDate, BaseSalary, DepartmentId)"
                     + "VALUES"
-                    + "(?, ?, ?, ?, ?)"
+                    + "(?, ?, ?, ?, ?)",
+                    Statement.RETURN_GENERATED_KEYS
             );
 
             st.setString(1, "Thierry");
@@ -30,7 +31,16 @@ public class Program {
             st.setInt(5, 4);
 
             int rowsAffected = st.executeUpdate();
-            System.out.println("Done!, rows affected: " + rowsAffected);
+            if (rowsAffected > 0) {
+                ResultSet rs = st.getGeneratedKeys();
+                while (rs.next()) {
+                    int id = rs.getInt(1);
+                    System.out.println("Done!  Id: " + id);
+                }
+            }
+            else {
+                System.out.println("None rows affected");
+            }
         }
         catch (SQLException e) {
             e.printStackTrace();
